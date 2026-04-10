@@ -1,26 +1,26 @@
 # STT Diarization gRPC (Docker)
 
-Bu loyiha speaker diarization va STT pipeline ni Docker konteynerlarda ishga tushiradi. gRPC asosidagi yangi oqim orqali eski 1x1 ishlov berish usuliga nisbatan ancha tez natija beradi.
+Speaker diarization and STT run in Docker containers. The **gRPC**-based path replaces a slow legacy **1x1** (fully sequential) workflow with a much faster pipeline.
 
-## Servislar
+## Services
 
-- `stt-service` - nutqni matnga o'girish (STT)
-- `diarization-service` - speaker diarization va gender aniqlash
-- `webui-service` - foydalanuvchi uchun web interfeys
-- `docker-compose.yml` - barcha servislarni birga ko'tarish uchun konfiguratsiya
+- `stt-service` – speech-to-text  
+- `diarization-service` – speaker diarization and gender estimation  
+- `webui-service` – simple web UI  
+- `docker-compose.yml` – runs all services together  
 
-## Performance taqqoslash
+## Performance comparison
 
-10 minutlik audio fayl ustidagi real taqqoslash:
+On a **10-minute** audio sample:
 
-| Pipeline | Vaqt |
+| Pipeline | Time |
 | --- | --- |
-| Eski 1x1 (ketma-ket) | ~10 minut |
-| gRPC (optimallashtirilgan) | ~9 sekund |
+| Legacy 1x1 (sequential) | ~10 minutes |
+| Optimized gRPC | ~9 seconds |
 
-gRPC bilan servislar orasidagi uzatish tezlashadi, navbatlash kamayadi va umumiy throughput oshadi.
+gRPC reduces overhead between services, cuts queueing, and improves end-to-end throughput.
 
-## Loyiha tuzilmasi
+## Layout
 
 ```text
 .
@@ -31,15 +31,15 @@ gRPC bilan servislar orasidagi uzatish tezlashadi, navbatlash kamayadi va umumiy
 └── webui-service/
 ```
 
-## .env (maxfiy kalitlar yashirilgan)
+## Environment variables
 
-`.env` faylni commit qilmang. Avval `.env.example` dan nusxa oling:
+Do **not** commit `.env`. Start from the example file:
 
 ```bash
 cp .env.example .env
 ```
 
-Namuna:
+Template (replace placeholders with your real values locally only):
 
 ```env
 NVIDIA_VISIBLE_DEVICES=0
@@ -50,21 +50,21 @@ MSDD_MODEL=YOUR_MSDD_MODEL_ID
 STT_API=http://stt-service:8000/transcribe/
 ```
 
-## Ishga tushirish
+## Run
 
 ```bash
 docker compose up --build
 ```
 
-## Foydali buyruqlar
+## Useful commands
 
-To'xtatish va tozalash:
+Stop and clean up:
 
 ```bash
 docker compose down --volumes --remove-orphans
 ```
 
-Loglarni ko'rish:
+Logs:
 
 ```bash
 docker compose logs -f

@@ -1,37 +1,37 @@
 # stt-diarization-grpc
 
-gRPC asosida qurilgan STT + speaker diarization stack. Loyiha Docker orqali bir necha servisni birgalikda ishga tushiradi va real ishlashda oldingi 1x1 pipeline bilan solishtirganda sezilarli tezlashuv beradi.
+STT and speaker diarization stack built on **gRPC**. The project runs multiple services together with **Docker** and is significantly faster in practice than a legacy sequential **1x1** pipeline.
 
-## Nima bor
+## What's included
 
-- `diarization-docker/stt-service` - STT xizmati
-- `diarization-docker/diarization-service` - diarization (MSDD, gender, gRPC)
-- `diarization-docker/webui-service` - web interfeys
-- `diarization-docker/docker-compose.yml` - konteynerlarni orkestratsiya qilish
+- `diarization-docker/stt-service` – speech-to-text service  
+- `diarization-docker/diarization-service` – diarization (MSDD, gender, gRPC)  
+- `diarization-docker/webui-service` – web UI  
+- `diarization-docker/docker-compose.yml` – container orchestration  
 
-## Performance taqqoslash (10 minut audio)
+## Performance (10-minute audio)
 
-| Yondashuv | Natija vaqti |
+| Approach | Time |
 | --- | --- |
-| Eski 1x1 pipeline | ~10 minut |
-| gRPC pipeline | ~9 sekund |
+| Legacy 1x1 pipeline | ~10 minutes |
+| gRPC pipeline | ~9 seconds |
 
-Bu o'zgarishning asosiy sababi - servislar orasidagi aloqani optimallashtirish, oqimni parallel ishlatish va Docker ichida barqaror deploy qilish.
+The main drivers are optimized inter-service communication, better use of parallelism/streaming, and stable deployment in Docker.
 
-## Ishga tushirish
+## Getting started
 
-1. `diarization-docker/.env.example` faylidan nusxa oling:
+1. Copy the environment template:
 
    ```bash
    cp diarization-docker/.env.example diarization-docker/.env
    ```
 
-2. Kerakli qiymatlarni `.env`ga kiriting (tokenlarni repoga commit qilmang).
+2. Fill in your values in `.env`. **Do not commit secrets** (tokens, API keys).
 
-3. Servislarni ishga tushiring:
+3. Start the stack:
 
    ```bash
    docker compose -f diarization-docker/docker-compose.yml up --build
    ```
 
-Batafsil README: `diarization-docker/README.md`.
+More detail: see `diarization-docker/README.md`.
