@@ -1,0 +1,4 @@
+dotenv
+gradio
+requests
+python-multipart

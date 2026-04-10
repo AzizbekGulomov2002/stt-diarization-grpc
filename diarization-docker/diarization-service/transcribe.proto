@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+message DiarizationEntry {
+  int32 id = 1;
+  string speaker = 2;
+  float start = 3;
+  float end = 4;
+  string text = 5;
+  string gender = 6;
+}
+
+message TranscribeRequest {
+  string audio_url = 1;
+}
+
+message TranscribeResponse {
+  repeated DiarizationEntry diarization = 3;
+  string audio_url = 4;
+  repeated string speakers = 5;
+}
+
+service TranscribeService {
+  rpc TranscribeAudio (TranscribeRequest) returns (TranscribeResponse);
+}

@@ -1,0 +1,5 @@
+stt-docker/*
+env/
+venv/
+.env
+diarization-docker/.env

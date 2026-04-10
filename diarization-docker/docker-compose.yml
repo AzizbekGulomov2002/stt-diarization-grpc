@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  stt-service:
+    build: ./stt-service
+    runtime: nvidia
+    deploy:        # Required for full GPU access in some setups
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"           # or "all" if you want all available GPUs
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=3
+      - HF_TOKEN=${HF_TOKEN}
+      - STT_MODEL=${STT_MODEL}
+
+  diarization-service:
+    build: ./diarization-service
+    runtime: nvidia
+    shm_size: '5gb'
+    deploy:        # Required for full GPU access in some setups
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"           # or "all" if you want all available GPUs
+              capabilities: [gpu]
+    ports:
+      - "50052:50051"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=3
+      - HF_TOKEN=${HF_TOKEN}
+      - GENDER_MODEL=${GENDER_MODEL}
+      - MSDD_MODEL=${MSDD_MODEL}
+      - STT_API=http://stt-service:8000/transcribe/
+    depends_on:
+      - stt-service
+
+networks:
+  default:
+    driver: bridge
